@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Mapbox示例</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- 强制360浏览器用WebKit内核 -->
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <link rel="stylesheet" href="libs/bootstrap/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/github-markdown.css">
+    <link rel="stylesheet" href="css/prism.css">
+    <!-- 开源库jQuery -->
+    <script src="libs/jquery-1.11.2.min.js"></script>
+    <!-- 第三方插件库（复制功能插件） -->
+    <script src="libs/jqueryzclip/jquery.zclip.js" type="text/javascript"></script>    <!-- 源码编辑器样式文件与插件库 -->
+    <link type="text/css" rel="stylesheet" href="libs/codemirror/lib/codemirror.css" />
+    <script type="text/javascript" src="libs/codemirror/lib/codemirror.js"></script>
+    <script type="text/javascript" src="libs/codemirror/mode/xml/xml.js"></script>
+    <script type="text/javascript" src="libs/codemirror/mode/javascript/javascript.js"></script>
+    <script type="text/javascript" src="libs/codemirror/mode/css/css.js"></script>
+    <script type="text/javascript" src="libs/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script type="text/javascript" src="libs/codemirror/addon/edit/matchbrackets.js"></script>
+
+    <!-- bootstrap - markdown css-->
+    <script src="libs/bootstrap/bootstrap.min.js"></script>
+    <!-- markdown解释器 -->
+    <script type="text/javascript" src="libs/markdown/prism.js"></script>
+    <script type="text/javascript" src="libs/markdown/marked.min.js"></script>
+
+    <!-- 系统首页功能库 -->
+    <script type="text/javascript" src="js/init.js"></script>
+
+</head>
+<body>
+    <div id="header">
+        <a class="logo">
+            <img src="images/MapGIS-logo-white.png" />
+            <!--<img src="images/MapGIS logo边线样式.png" />-->
+            <span> Mapbox 示例集锦</span>
+        </a>
+    </div>
+    <div id="content">
+        <div class="leftsidebar_box">
+            <div class="line"></div>
+            <dl class="DataView">
+                <dt>矢量瓦片<img src="images/left/select_xl01.png" /></dt>
+                <dd onclick="setCore('Mapgis-VT', 'VectorTile', 'VectorTile/MapGIS-VT.md')">
+                    中地矢量瓦片
+                </dd>
+                <dd onclick="setCore('Other-VT', 'VectorTile', 'VectorTile/Other-VT.md')">
+                    第三方底图
+                </dd>
+            </dl>
+            <dl class="DataView">
+                <dt>可视化表达<img src="images/left/select_xl01.png" /></dt>
+                <dd onclick="setCore('Geojson-Big', 'DataView', 'DataView/AnimateMarker.md')">
+                    大数据量GeoJson
+                </dd>
+                <dd onclick="setCore('Heater', 'DataView', 'DataView/AnimateMarker.md')">
+                    热力图
+                </dd>
+                <dd onclick="setCore('Heater-Big', 'DataView', 'DataView/AnimateMarker.md')">
+                    热力图-大数据
+                </dd>
+                <dd onclick="setCore('Cluster-Base', 'DataView', 'DataView/AnimateMarker.md')">
+                    聚类图-基本使用
+                </dd>
+                <dd onclick="setCore('Cluster-Option', 'DataView', 'DataView/AnimateMarker.md')">
+                    聚类图-属性使用
+                </dd>
+                <dd onclick="setCore('Cluster-Zoom', 'DataView', 'DataView/AnimateMarker.md')">
+                    聚类图-定位视图
+                </dd>
+                <dd onclick="setCore('Animate-Marker', 'DataView', 'DataView/AnimateMarker.md')">
+                    动画轨迹-跟踪型
+                </dd>
+                <dd onclick="setCore('RealMove-Marker', 'DataView', 'DataView/AnimateMarker.md')">
+                    真实速度轨迹-跟踪型
+                </dd>
+                <dd onclick="setCore('Ant-Path', 'DataView', 'DataView/Ant-Path.md')">
+                    蚂蚁轨迹-展示型
+                </dd>
+                <dd onclick="setCore('Migrate', 'DataView', 'DataView/Migrate.md')">
+                    迁移轨迹-展示型
+                </dd>
+            </dl>
+            <dl class="ElasticSearch">
+                <dt>ElasticSearch<img src="images/left/select_xl01.png" /></dt>
+                <dd onclick="setCore('Heater', 'ElasticSearch', 'ElasticSearch/E01Heater_help.md')">
+                    时空聚类-点-mapgis api
+                </dd>
+                <dd onclick="setCore('Tracker', 'ElasticSearch', 'ElasticSearch/E01Heater_help.md')">
+                    时空查询-轨迹-mapgis api
+                </dd>
+                <dd onclick="setCore('Choropleth', 'ElasticSearch', 'ElasticSearch/E01Heater_help.md')">
+                    时空查询-网格-mapgis api
+                </dd>
+                <dd onclick="setCore('GeoFence', 'ElasticSearch', 'ElasticSearch/E01Heater_help.md')">
+                    地理围栏-mapgis api
+                </dd>
+                <dd onclick="setCore('Heater-Els', 'ElasticSearch', 'ElasticSearch/E01Heater_help.md')">
+                    ELS查询-热力点
+                </dd>
+                <dd onclick="setCore('Tracker-Simple', 'ElasticSearch', 'ElasticSearch/E01Heater_help.md')">
+                    ELS查询-排序轨迹
+                </dd>
+                <dd onclick="setCore('TrackerRange-Els', 'ElasticSearch', 'ElasticSearch/E01Heater_help.md')">
+                    ELS查询-范围查询轨迹
+                </dd>
+                <dd onclick="setCore('TrackerId-Els', 'ElasticSearch', 'ElasticSearch/E01Heater_help.md')">
+                    ELS查询-id查询轨迹
+                </dd>
+                <dd onclick="setCore('Choropleth-Els', 'ElasticSearch', 'ElasticSearch/E01Heater_help.md')">
+                    ELS查询-网格
+                </dd>
+                <dd onclick="setCore('GeoFence-Els', 'ElasticSearch', 'ElasticSearch/E01Heater_help.md')">
+                    ELS-地理围栏
+                </dd>
+            </dl>
+        </div>
+        <div id="code_wrapper">
+            <div id="code_arrow" class="go_back">
+                <span title="显示代码">›</span>
+                <p title="隐藏代码">‹</p>
+            </div>
+            <div id="code_core">
+                <div class="code_head">
+                    <!--<a id="code_copy" class="" href="javascript:void(0);">复制</a>
+                    源代码编辑器-->
+
+                    <span id="coreHeader" class="s1" onclick="showCore();">源代码编辑器</span>
+                    <span id="interfaceHeader" class="s2" onclick="showInstruction();">接口说明</span>
+                    <!--<a id="code_copy" rel="#codes">复制</a>-->
+                    <a id="code_restore" onclick="reStore();">还原</a>
+                    <a id="code_run" onclick="run();">运行</a>
+                </div>
+
+                <div class="code_body">
+                    <!--源码显示界面-->
+                    <div id="coreContent">
+                        <textarea id="codes" rows="10" cols="30" name="codes"> </textarea>
+                    </div>
+                    <!--接口说明显示界面-->
+                    <div id="interfaceContent" class = "interfaceContent">
+                        <div id="interface_iframe" class = "interface_iframe" name="interface_iframe"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="iframe_wrapper">
+            <iframe id="container_iframe" name="container_iframe" scrolling="no"></iframe>
+        </div>
+    </div>
+</body>
+</html>

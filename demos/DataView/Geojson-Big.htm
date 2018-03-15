@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Add a third party vector tile source</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib.js"></script>
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='map'></div>
+  <script>
+    var weburl = "http://localhost:8811/bigdata/dataview/xian.json";
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: {
+        "version": 8,
+        "sources": {
+            "raster-tiles": {
+                "type": "raster",
+                "url": "mapbox://mapbox.streets",
+                "tileSize": 256
+            }
+        },
+        "layers": [{
+            "id": "simple-tiles",
+            "type": "raster",
+            "source": "raster-tiles",
+            "minzoom": 0,
+            "maxzoom": 22
+        }]
+    },
+    center: [112.95, 27.87], // starting position
+    zoom: 6 // starting zoom
+});
+
+
+    map.on('load', function() {
+      jQuery.ajax({
+        async: true,
+        url: weburl,
+        success: function(data) {
+          updateView(data);
+        }
+      });
+    });
+
+    function updateView(data) {
+      var geojson = JSON.parse(data);
+      map.addLayer({
+        'id': 'maine',
+        'type': 'fill',
+        'source': {
+          'type': 'geojson',
+          'data': geojson
+        },
+        'layout': {},
+        'paint': {
+          'fill-color': '#088',
+          'fill-opacity': 0.8
+        }
+      });
+    }
+
+    map.addControl(new mapboxgl.NavigationControl());
+  </script>
+
+</body>
+
+</html>
