@@ -32,7 +32,11 @@
       container: 'mapid',
       style: 'mapbox://styles/mapbox/dark-v8',
       zoom: 10,
-      center: [116.35, 39.9]
+      center: [116.35, 39.9],
+      attributionControl: false,
+      pitch: 45,
+      maxBounds: [[115.8220, 39.5379],[117.2173, 40.1946]], // beijing bounds - W,S,E,N
+      hash: true
     });
 
 
@@ -76,7 +80,7 @@
             'geohash': {
               geohash_grid: {
                 field: "geometry",
-                precision: 10
+                precision: 12
               }
             }
           }
