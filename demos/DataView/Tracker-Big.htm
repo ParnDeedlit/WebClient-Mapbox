@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>leaflet显示</title>
+  <script include="jquery,geojson,geohash,moment,shapefile" src="../../libs/zondyclient/include-lib.js"></script>
+  <script include="elasticsearch,echarts" src="../../libs/zondyclient/include-mapboxgl.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #mapid {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    refreshHistory();
+
+    function refreshHistory() {
+
+      var myChart = echarts.init(document.getElementById('mapid'), null, {
+        devicePixelRatio: 1
+      });
+
+      var geoJSON = {
+        features: []
+      };
+      var regions = [];
+      var readShp = new Promise(function(resolve, reject) {
+        shapefile.open('../../data/echart/beijing/buildings.shp', '../../data/echart/beijing/buildings.dbf')
+          .then(source => source.read()
+            .then(function append(result) {
+              if (result.done) {
+                resolve();
+                return;
+              }
+              var feature = result.value;
+              feature.properties.name = geoJSON.features.length + '';
+              regions.push({
+                name: geoJSON.features.length + '',
+                value: 1,
+                height: 20
+                //height: parseInt(feature.properties.height) //properties
+              })
+              geoJSON.features.push(feature);
+              return source.read().then(append);
+            })
+          );
+      });
+
+      myChart.showLoading();
+
+      Promise.all([$.getJSON('../../data/echart/beijing/tracks.json'), readShp])
+        .then(function([data, lastFeature]) {
+
+          var point_list = {};
+          var lines = [];
+          var all_points = [];
+
+          for (var i = 0; i < data.features.length; i++) {
+            var feature = data.features[i];
+            var coord = feature.geometry.coordinates;
+            var id = feature.properties.imei;
+            var index = 1;
+            var line = {
+              'coords': []
+            };
+            for (var j = 0; j < coord.length; j++, index++) {
+                var point = coord[j];
+                line.coords.push([point[1], point[0], 5]);
+            }
+            lines.push(line);
+          }
+          myChart.hideLoading();
+
+          echarts.registerMap('buildings', geoJSON);
+
+          myChart.setOption({
+            mapbox: {
+              center: [116.35, 39.9],
+              zoom: 14,
+              pitch: 50,
+              bearing: -10,
+              altitudeScale: 2,
+              style: 'mapbox://styles/mapbox/dark-v9',
+              postEffect: {
+                enable: true,
+                screenSpaceAmbientOcclusion: {
+                  enable: true,
+                  intensity: 1.2,
+                  radius: 6,
+                  quality: 'high'
+                },
+                screenSpaceReflection: {
+                  enable: true
+                }
+              },
+              light: {
+                main: {
+                  intensity: 1,
+                  shadow: true,
+                  shadowQuality: 'high'
+                },
+                ambient: {
+                  intensity: 0.
+                },
+                ambientCubemap: {
+                  texture: '../../data/echart/beijing/data.hdr',
+                  exposure: 1,
+                  diffuseIntensity: 0.5,
+                  specularIntensity: 2
+                }
+              }
+            },
+            series: [{
+              type: 'lines3D',
+
+              coordinateSystem: 'mapbox',
+
+              effect: {
+                show: true,
+                constantSpeed: 1,
+                trailWidth: 2,
+                trailLength: 0.04,
+                trailOpacity: 1,
+                spotIntensity: 10
+              },
+
+              blendMode: 'lighter',
+
+              polyline: true,
+
+              lineStyle: {
+                width: 0.1,
+                color: 'rgb(200, 40, 0)',
+                opacity: 0.
+              },
+
+              data: {
+                count: function() {
+                  return lines.length;
+                },
+                getItem: function(idx) {
+                  return lines[idx]
+                }
+              }
+            }, {
+              type: 'map3D',
+              map: 'buildings',
+
+              coordinateSystem: 'mapbox',
+              shading: 'realistic',
+              silent: true,
+
+              instancing: true,
+
+              data: regions,
+
+              realisticMaterial: {
+                metalness: 1,
+                roughness: 0.2,
+              }
+            }]
+          });
+
+        });
+    }
+
+  </script>
+</body>
+
+</html>

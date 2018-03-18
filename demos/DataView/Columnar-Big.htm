@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>leaflet显示</title>
+  <script include="jquery,geojson,geohash,moment" src="../../libs/zondyclient/include-lib.js"></script>
+  <script include="elasticsearch" src="../../libs/zondyclient/include-mapboxgl.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #mapid {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'mapid',
+      style: 'mapbox://styles/mapbox/light-v8',
+      zoom: 10,
+      center: [116.35, 39.9],
+      attributionControl: false,
+      pitch: 45,
+      maxBounds: [[115.8220, 39.5379],[117.2173, 40.1946]], // beijing bounds - W,S,E,N
+      hash: true
+    });
+
+
+    var mapExtent, mapLevel, startTime, endTime, geojson;
+    startTime = currentTime = Date.parse(new Date("2012-11-20 00:00:00")); //1516723200000; 毫秒
+    endTime = Date.parse(new Date("2012-11-20 23:59:59")); // 1516809599000; 毫秒
+    var client = new elasticsearch.Client({
+      host: '192.168.94.121:9200'
+    });
+
+    var minCount = Number.MAX_VALUE;
+    var maxCount = 0;
+    var levelCount = 15, avaCount = 0;
+
+    map.on('load', function() {
+      initView();
+      loadData();
+
+    });
+
+    function initView() {
+      var att = new mapboxgl.AttributionControl({
+        position: 'bottom-right'
+      })
+      att._updateAttributions = function() {
+        this._container.innerHTML = "&copy; <a href=\"https://www.smaryun.com\" target=\"_blank\">MapGIS</a> | <a href=\"http://www.mapbox.com\" target=\"_blank\">MapBox</a>"
+      }
+      map.addControl(att);
+      map.addControl(new mapboxgl.NavigationControl());
+      map.addControl(new mapboxgl.FullscreenControl());
+
+      map.addControl(new mapboxgl.ScaleControl({
+        position: 'bottom-right'
+      }));
+
+      map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true
+        }
+      }));
+    }
+
+
+    function loadData() {
+      $.getJSON('../../data/dataview/bigdata-columnar-6.json', function(data) {
+        convertDataToGeoJson(data);
+        updateView(geojson);
+      });
+    };
+
+    function convertDataToGeoJson(origindata) {
+      var columnarPolygons = [];
+      origindata.aggregations.geohash.buckets.forEach(function(bucket) {
+        var coordinates = decodeGeoHash(bucket.key);
+        var countNumber = bucket.doc_count;
+        var polygon = {
+          polygonKey: [
+            [
+              [coordinates.longitude[0], coordinates.latitude[1]],
+              [coordinates.longitude[1], coordinates.latitude[1]],
+              [coordinates.longitude[1], coordinates.latitude[0]],
+              [coordinates.longitude[0], coordinates.latitude[0]],
+              [coordinates.longitude[0], coordinates.latitude[1]]
+            ]
+          ],
+          count: bucket.doc_count
+        }; //[0] min [1]max [2] 中心点
+        columnarPolygons.push(polygon);
+        if(countNumber > maxCount) maxCount = countNumber;
+        if(countNumber < minCount) minCount = countNumber;
+        avaCount += countNumber;
+      });
+      avaCount = avaCount / origindata.aggregations.geohash.buckets.length;
+      geojson = GeoJSON.parse(columnarPolygons, {
+        'Polygon': 'polygonKey'
+      });
+    }
+
+    function updateView(data) {
+      map.addSource('beijing-taxi', {
+        "type": "geojson",
+        "data": data
+      });
+
+      var heightDegrees = [];
+      var levelClip = 5;  // 15 = 5 + 10
+      var highDegreeLength = 6000 - avaCount ;
+      var lowDegreeLength =  avaCount - minCount;
+      var highDegree = highDegreeLength / (levelCount - levelClip);
+      var lowDegree = lowDegreeLength / levelClip;
+      var startDegree = minCount;
+
+      for(var level = 0; level < levelCount; level++){
+        if(level < levelClip){
+          startDegree = startDegree + lowDegreeLength;
+        } else{
+          startDegree = startDegree + highDegreeLength;
+        }
+        heightDegrees.push(startDegree);
+      }
+      map.addLayer({
+        "id": "beijing-grid",
+        "type": "fill-extrusion",
+        "source": "beijing-taxi",
+        "paint": {
+          "fill-extrusion-base": 10,
+          "fill-extrusion-height": {
+            "property": 'count',
+            "stops": [
+              [{
+                zoom: 10,
+                value: minCount
+              }, 200],
+              [{
+                zoom: 10,
+                value: maxCount
+              }, 15000],
+              [{
+                zoom: 14,
+                value: minCount
+              }, 0],
+              [{
+                zoom: 14,
+                value: maxCount
+              }, 15000]
+            ]
+          },
+          "fill-extrusion-color": {
+            "property": 'count',
+            "stops": [
+              [1, "rgb(0,41,81)"],
+              [heightDegrees[0], "rgb(1,19,157)"],
+              [heightDegrees[1], "rgb(4,37,212)"],
+              [heightDegrees[2], "rgb(6,74,243)"],
+              [heightDegrees[3], "rgb(13,149,233)"],
+              [heightDegrees[4], "rgb(25,207,210)"],
+              [heightDegrees[5], "rgb(130,253,206)"],
+              [heightDegrees[6], "rgb(104,222,134)"],
+              [heightDegrees[7], "rgb(164,235,79)"],
+              [heightDegrees[8], "rgb(255,255,128)"],
+              [heightDegrees[9], "rgb(255,214,0)"],
+              [heightDegrees[10], "rgb(254,173,91)"],
+              [heightDegrees[11], "rgb(250,124,1)"],
+              [heightDegrees[12], "rgb(254,0,0)"],
+              [heightDegrees[13], "rgb(129,0,65)"],
+              [heightDegrees[14], "rgb(65,0,64)"]
+            ]
+          },
+          "fill-extrusion-opacity": {
+            "base": 1,
+            "stops": [
+              [10, 0.8],
+              [12.5, 0.6],
+              [14, 0.4]
+            ]
+          }
+        }
+      });
+
+    }
+  </script>
+</body>
+
+</html>

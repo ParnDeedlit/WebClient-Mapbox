@@ -67,9 +67,10 @@
     // if (inArray(includes, 'mapv')) {
     //    inputScript("http://" + ip + ":" + socket + "/cdn/mapv/mapv.min.js");
     // }
-    // if (inArray(includes, 'echarts')) {
-    //    inputScript("http://" + ip + ":" + socket + "/cdn/echarts/echarts.js");
-    // }
+    if (inArray(includes, 'echarts')) {
+       inputScript(httpUrl + "/cdn/echarts/echarts.min.js");
+       inputScript(httpUrl + "/cdn/echarts/echarts-gl.min.js");
+    }
     if (inArray(includes, 'elasticsearch')) {
        inputScript(httpUrl + "/cdn/elasticsearch/14.1.0/elasticsearch.min.js");
     }
