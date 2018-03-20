@@ -61,7 +61,7 @@
 
       myChart.showLoading();
 
-      Promise.all([$.getJSON('../../data/echart/beijing/tracks.json'), readShp])
+      Promise.all([$.getJSON('../../data/echart/beijing/tracks-180.json'), readShp])
         .then(function([data, lastFeature]) {
 
           var point_list = {};
@@ -78,7 +78,7 @@
             };
             for (var j = 0; j < coord.length; j++, index++) {
                 var point = coord[j];
-                line.coords.push([point[1], point[0], 5]);
+                line.coords.push([point[0], point[1], 5]);
             }
             lines.push(line);
           }
@@ -132,7 +132,7 @@
                 show: true,
                 constantSpeed: 1,
                 trailWidth: 2,
-                trailLength: 0.04,
+                trailLength: 1,
                 trailOpacity: 1,
                 spotIntensity: 10
               },

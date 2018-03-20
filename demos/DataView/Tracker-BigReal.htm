@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>leaflet显示</title>
+  <script include="jquery,geojson" src="../../libs/zondyclient/include-lib.js"></script>
+  <script include="elasticsearch" src="../../libs/zondyclient/include-mapboxgl.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #mapid {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'mapid',
+      style: 'mapbox://styles/parndeedlit/cjexm0cai0l4v2so5qwofaii5',
+      zoom: 12,
+      center: [116.35, 39.9],
+      attributionControl: false,
+      pitch: 45,
+      maxBounds: [
+        [115.8220, 39.5379],
+        [117.2173, 40.1946]
+      ], // beijing bounds - W,S,E,N
+      hash: true
+    });
+
+    var geojson;
+
+    map.on('load', function() {
+
+      $.getJSON('../../data/dataview/bigdata-tracks-60.json', function(data) {
+        geojson = convertDataToGeoJson(data);
+        updateView(geojson);
+      });
+
+    });
+
+    function convertDataToGeoJson(data) {
+      var result;
+      var lines = [];
+      for(var index = 0; index < data.features.length; index++){
+          var geometry = data.features[index];
+          var coords = geometry.coordinates;
+          var line = {"coord":coords};
+          lines.push(line);
+      }
+      result = GeoJSON.parse(lines, {'LineString': 'coord');
+      return result;
+    }
+
+    function updateView(data) {
+      map.addSource('tracks', {
+        "type": "geojson",
+        "data": data
+      });
+      map.addLayer({
+        id: "tracks-point",
+        type: "circle",
+        source: "tracks",
+        layout: {
+            "line-join": "round",
+            "line-cap": "round"
+        },
+        paint: {
+            "line-color": "#888",
+            "line-width": 8
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
