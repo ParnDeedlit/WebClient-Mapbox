@@ -1,4 +1,6 @@
 ## 地理围栏
+[Bug提交地址,如有问题请提交问题说明,我们会及时响应](https://github.com/ParnDeedlit/WebClient-Mapbox/issues)
+
 ----
 
 ----

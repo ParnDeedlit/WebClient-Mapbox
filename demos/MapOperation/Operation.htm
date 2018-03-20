@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>leaflet显示</title>
+  <script include="jquery,geojson,geohash,moment" src="../../libs/zondyclient/include-lib.js"></script>
+  <script include="elasticsearch" src="../../libs/zondyclient/include-mapboxgl.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #mapid {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'mapid',
+      style: 'mapbox://styles/mapbox/light-v8',
+      zoom: 10,
+      center: [116.35, 39.9],
+      attributionControl: false,
+      pitch: 45,
+      hash: true
+    });
+
+    map.on('load', function() {
+      initView();
+      loadData();
+    });
+
+    function initView() {
+      var att = new mapboxgl.AttributionControl({
+        position: 'bottom-right'
+      })
+      att._updateAttributions = function() {
+        this._container.innerHTML = "&copy; <a href=\"https://www.smaryun.com\" target=\"_blank\">MapGIS</a> | <a href=\"http://www.mapbox.com\" target=\"_blank\">MapBox</a>"
+      }
+      map.addControl(att);
+      map.addControl(new mapboxgl.NavigationControl());
+      map.addControl(new mapboxgl.FullscreenControl());
+
+      map.addControl(new mapboxgl.ScaleControl({
+        position: 'bottom-right'
+      }));
+
+      map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true
+        }
+      }));
+    }
+
+    function loadData() {
+
+    };
+
+    function updateView(data) {
+
+    }
+  </script>
+</body>
+
+</html>

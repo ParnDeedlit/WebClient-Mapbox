@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>leaflet显示</title>
   <script include="jquery,geojson,moment" src="../../libs/zondyclient/include-lib.js"></script>
-  <script include="elasticsearch" src="../../libs/zondyclient/include-mapboxgl.js"></script>
+  <script include="els-zondy" src="../../libs/zondyclient/include-mapboxgl.js"></script>
   <style>
     #mapid {
       position: absolute;
@@ -48,19 +48,27 @@
       center: [108.95, 34.25]
     });
 
+    var ip = "192.168.17.237";
+    var socket = "8080";
+    var indexName = "df_history";
+    var typeName = "2017-12-17";
+    var paramSpatialType = "polygon";
+    var paramSpatialOption = "34.8904,107.6743;34.8904,110.4648;33.4750,110.4648;33.4750,107.6743";
+    var queryField = "imei"
+
+    var ids;// = [];
 
     var mapExtent, mapLevel, startTime, endTime, geojson, timeformat;
     flashSpeed = 2000; //2秒一刷新
-    var timer = self.setInterval("clock()", flashSpeed);
+    var timer;
     updateTime();
 
     map.on('load', function() {
       $.getJSON('../../data/elasticsearch/geofence.json', function(data) {
         initGeoFence(data);
-        // convertDataToGeoJson(data.agg);
-        // updateView(geojson);
+        initCarIds(ip, socket, indexName, typeName, paramSpatialType, paramSpatialOption, queryField);
+        timer = self.setInterval("clock()", flashSpeed);
       });
-
     });
 
     function clock() {
@@ -91,6 +99,26 @@
           'fill-outline-color': '#FFF'
         }
       });
+    }
+
+    function initCarIds(ip, socket, db, table, spatial_type, spatial_options, id_field){
+      var url = getRangeIdsUri(ip, socket, db, table, spatial_type, spatial_options, id_field);
+      var idsList = "";
+      $.get(url, function(result){
+        for(var index = 0; index < result.length&& index < 20; index++){
+          ids.push(result[index].id);
+          idsList += result[index].id + ",";
+        }
+        idsList = idsList.substring(0, idsList.length - 1);
+        var url1 = "http://192.168.17.237:8080/es/GeoEnclosureQuery?indexName=df_history" +
+          "&typeName=2017-12-17&spatialCondition=polygon:" + paramSpatialOption
+          "&timefield=dataTime&idfield=imei&ids=" + idsList;
+        $.get(url1, function(result)){
+
+        });
+      });
+
+
     }
 
     function loadData() {
@@ -136,7 +164,6 @@
       convertDataToGeoJson(heatPoints);
       updateView(geojson);
     }
-
 
     function convertDataToGeoJson(dataArray) {
       geojson = GeoJSON.parse(dataArray, {

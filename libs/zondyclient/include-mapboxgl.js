@@ -58,6 +58,28 @@
       inputCSS(httpUrl + "/cdn/mapboxgl/mapbox-gl.css");
       inputScript(httpUrl + "/cdn/mapboxgl/mapbox-gl.js");
     }
+    if (inArray(includes, 'echarts')) {
+       inputScript(httpUrl + "/cdn/echarts/echarts.min.js");
+       inputScript(httpUrl + "/cdn/echarts/echarts-gl.min.js");
+    }
+    if (inArray(includes, 'elasticsearch')) {
+       inputScript(httpUrl + "/cdn/elasticsearch/14.1.0/elasticsearch.min.js");
+    }
+    if (inArray(includes, 'els-zondy')) {
+       inputScript(httpUrl + "/cdn/zondyclient/els-zondy.js");
+    }
+    if (inArray(includes, 'geohash')) {
+      inputScript(httpUrl + "/cdn/geohash/geohash.js");
+    }
+    if (inArray(includes, 'geojson')) {
+      inputScript(httpUrl + "/cdn/geojson/geojson.min.js");
+    }
+    if (inArray(includes, 'shapefile')) {
+      inputScript(httpUrl + "/cdn/shapefile/shapefile.js");
+    }
+    if (inArray(includes, 'turf')) {
+      inputScript(httpUrl + "/cdn/turf/turf.min.js");
+    }
     // if (!inArray(includes, 'wmts')) {
     //    inputScript("http://" + ip + ":" + socket + "/cdn/leaflet plugins/leaflet-tilelayer-wmts.js");
     // }
@@ -67,13 +89,6 @@
     // if (inArray(includes, 'mapv')) {
     //    inputScript("http://" + ip + ":" + socket + "/cdn/mapv/mapv.min.js");
     // }
-    if (inArray(includes, 'echarts')) {
-       inputScript(httpUrl + "/cdn/echarts/echarts.min.js");
-       inputScript(httpUrl + "/cdn/echarts/echarts-gl.min.js");
-    }
-    if (inArray(includes, 'elasticsearch')) {
-       inputScript(httpUrl + "/cdn/elasticsearch/14.1.0/elasticsearch.min.js");
-    }
   }
 
   load();

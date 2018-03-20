@@ -58,23 +58,15 @@
     if (inArray(includes, 'jquery')) {
       inputScript(httpUrl + "/cdn/jquery/jquery-1.12.4.min.js");
     }
-    if (inArray(includes, 'geohash')) {
-      inputScript(httpUrl + "/cdn/geohash/geohash.js");
-    }
     if (inArray(includes, 'moment')) { //用于时间戳转换
        inputScript(httpUrl + "/cdn/moment/2.18.1/moment.min.js");
        inputScript(httpUrl + "/cdn/moment/2.18.1/locale/zh-cn.js");
-    }
-    if (inArray(includes, 'geojson')) {
-      inputScript(httpUrl + "/cdn/geojson/geojson.min.js");
     }
     if (inArray(includes, 'bootstrap')) {
       inputCSS(httpUrl + "/cdn/bootstrap/bootstrap.min.css");
       inputScript(httpUrl + "/cdn/bootstrap/bootstrap.min.js");
     }
-    if (inArray(includes, 'shapefile')) {
-      inputScript(httpUrl + "/cdn/shapefile/shapefile.js");
-    }
+
 
 
     if (inArray(includes, 'proj4')) {

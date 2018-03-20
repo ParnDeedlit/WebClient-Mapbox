@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Measure distances</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib.js"></script>
+  <script include="geohash,geojson,turf" src="../../libs/zondyclient/include-mapboxgl.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='map'></div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v9',
+      center: [116.35, 39.9],
+      zoom: 10
+    });
+    var geojson;
+
+    map.on('load', function() {
+      loadData();
+    });
+
+    function loadData() {
+      $.getJSON('../../data/analysis/buffer-hash-5.json', function(data) {
+        convertDataToGeoJson(data);
+        updateView(geojson);
+      });
+    }
+
+    function convertDataToGeoJson(origindata) {
+      var columnarPoints = [];
+      var points;
+      origindata.aggregations.geohash.buckets.forEach(function(bucket) {
+        var coordinates = decodeGeoHash(bucket.key);
+        var countNumber = bucket.doc_count;
+        var point = {
+          pointKey: [
+            coordinates.longitude[2], coordinates.latitude[2]
+          ],
+          count: bucket.doc_count
+        }; //[0] min [1]max [2] 中心点
+        columnarPoints.push(point);
+      });
+      points = GeoJSON.parse(columnarPoints, {
+        'Point': 'pointKey'
+      });
+      geojson = turf.buffer(points, 1.5, {
+        units: 'miles'
+      });
+    }
+
+    function updateView(data) {
+      map.addSource('geojson-buffer', {
+        "type": "geojson",
+        "data": data
+      });
+
+      map.addLayer({
+        "id": "buffer-polygon",
+        "type": "fill",
+        "source": "geojson-buffer",
+        'layout': {},
+        'paint': {
+          'fill-color': '#088',
+          'fill-opacity': 0.5,
+          'fill-outline-color': '#FFF'
+        }
+      });
+    }
+  </script>
+
+</body>
+
+</html>
