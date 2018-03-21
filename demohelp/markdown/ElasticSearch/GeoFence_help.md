@@ -3,12 +3,41 @@
 
 ----
 
+### 主要代码逻辑
+
+这里的代码的主要逻辑如下:
+
+**1.初始化操作**
+
+    1.1 initMap 初始化地图
+
+    1.2 initGeoFencePolygon 该函数主要获取用于网络请求的参数,传入的围栏的范围
+
+    1.3 initGeoFence 地图显示地理围栏范围,更具不同的属性设置不同的颜色
+
+    1.4 initTrackView 初始化地图中动态设备点的样式,如在围栏内蓝色,不在使用红色等
+
+**2. 获取设备 异步操作**
+
+    2.1 initCarIds 获取要监控的设备id列表
+
+**3. 实时查询 异步操作**
+
+    3.1 loadRealData 根据1.2获取的围栏范围以及2获取的设备列表来请求数据信息
+
+    3.2 updateTrackView  根据上面请求的数据实时更新地图上的设备状态
+
 ----
 ### 查询设备id列表
 
 ``` html
 http://192.168.17.237:8080/es/generalQuery?indexName=df_history&typeName=2017-12-17&spatialCondition=polygon:29.8439,121,5894;33,5194,107,9816;34.3662,108.3814&timeCondition=&queryField=imei
 ```
+
+上面的字符串拼接可以使用els-mapgis中的getRangeIdsUri来实现.使用方式
+~~~ html
+<script include="els-mapgis,geojson" src="libs/zondyclient/include-mapboxgl.js"></script>
+~~~
 
 #### 参数表格
 
@@ -57,6 +86,7 @@ http://192.168.17.237:8080/es/GeoEnclosureQuery?indexName=df_history&typeName=20
 ----
 
 #### 返回值
-> result (true/false)
-
-> 坐标点
+|名称|类型|说明|
+|:---|:---|:---|
+|result|布尔值|**在围栏内**为true; ~~不在围栏内~~为false|
+|geo|Json对象| **geo:{lon:110,lat:34}**|
