@@ -65,8 +65,8 @@
     if (inArray(includes, 'elasticsearch')) {
        inputScript(httpUrl + "/cdn/elasticsearch/14.1.0/elasticsearch.min.js");
     }
-    if (inArray(includes, 'els-zondy')) {
-       inputScript(httpUrl + "/cdn/zondyclient/els-zondy.js");
+    if (inArray(includes, 'els-mapgis')) {
+       inputScript(httpUrl + "/cdn/zondyclient/els-mapgis.js");
     }
     if (inArray(includes, 'geohash')) {
       inputScript(httpUrl + "/cdn/geohash/geohash.js");
