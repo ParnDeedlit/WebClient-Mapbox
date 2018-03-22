@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>leaflet显示</title>
   <script include="jquery,moment" src="../../libs/zondyclient/include-lib.js"></script>
-  <script include="els-mapgis,geojson" src="../../libs/zondyclient/include-mapboxgl.js"></script>
+  <script include="elasticsearch,geojson,turf" src="../../libs/zondyclient/include-mapboxgl.js"></script>
   <style>
     #mapid {
       position: absolute;
@@ -48,7 +48,6 @@
           "osm-tiles": {
             "type": "raster",
             'tiles': [
-              //"http://a.tile.thunderforest.com/transport/{z}/{x}/{y}.png"
               "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
             ],
             'tileSize': 256
@@ -67,17 +66,17 @@
       center: [108.95, 34.25]
     });
 
-    var polygons = [];  //记录地理围栏的范围,用于查询时传入参数,与上面的paramSpatialOption一致
-    var idsList = "";//记录查询的设备id,用于查询是传入参数,与上面的queryField一致
+    var polygons = []; //记录地理围栏的范围,用于查询时传入参数,与上面的paramSpatialOption一致
+    var idsList = []; //记录查询的设备id,用于查询是传入参数,与上面的queryField一致
 
-    var trackpoint = {   //用于记录的实时状态
+    var trackpoint = { //用于记录的实时状态
       "type": "FeatureCollection",
       "features": []
     };
     //鼠标移动到对应的点是出现对应的弹出标注
     var popup = new mapboxgl.Popup({
-        closeButton: false,
-        closeOnClick: false
+      closeButton: false,
+      closeOnClick: false
     });
 
     var timeformat; //记录当前实际时间
@@ -87,7 +86,7 @@
     updateTime();
     initMap();
 
-    function updateTime() {//实时更新当前时间
+    function updateTime() { //实时更新当前时间
       timeformat = moment().format("YYYY-MM-DD HH:mm:ss");
       var timePane = document.getElementById('info');
       timePane.innerHTML = '<h4>北京时间</h4>' +
@@ -101,10 +100,10 @@
         initTrackView();
         //请求地理围栏的围栏范围
         $.getJSON('../../data/elasticsearch/geofence.json', function(data) {
-          initGeoFencePolygons(data);//初始化请求参数
-          initGeoFence(data);//地图显示地理围栏范围
+          initGeoFencePolygons(data); //初始化请求参数
+          initGeoFence(data); //地图显示地理围栏范围
           //初始化请求查询的设备列表
-          initCarIds(ip, socket, indexName, typeName, paramSpatialType, paramSpatialOption, queryField);
+          timer = self.setInterval("initCarIds()", flashSpeed);//启动定时器,每隔若干秒查询一次
         });
       });
       //鼠标移动/移出设备点是显示/删除标注,特别注意,下面的track-position-out必须和initTrackView()中的map.addLayer({id: "track-position-in",..}中的id一致,这里是绑定关系
@@ -112,8 +111,8 @@
         map.getCanvas().style.cursor = 'pointer';
 
         var coordinates = e.features[0].geometry.coordinates.slice();
-        var description =" status = " + e.features[0].properties.status
-              + " imei = " + e.features[0].properties.imei;
+        var description = " status = " + e.features[0].properties.status +
+          " imei = " + e.features[0].properties.imei;
 
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
@@ -133,8 +132,8 @@
         map.getCanvas().style.cursor = 'pointer';
 
         var coordinates = e.features[0].geometry.coordinates.slice();
-        var description =" status = " + e.features[0].properties.status
-              + " imei = " + e.features[0].properties.imei;
+        var description = " status = " + e.features[0].properties.status +
+          " imei = " + e.features[0].properties.imei;
 
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
@@ -154,13 +153,8 @@
     //该函数主要用于网络请求判断是否离开围栏时,传入的围栏的范围
     function initGeoFencePolygons(data) {
       for (var index = 0; index < data.features.length; index++) {
-        var geoFencePolygon = "";
-        var coords = data.features[index].geometry.coordinates[0];
-        for (var i = 0; i < coords.length; i++) {
-          var point = coords[i];
-          geoFencePolygon += "" + point[1] + "," + point[0] + ";";
-        }
-        polygons.push(geoFencePolygon);
+        var polygon = data.features[index];
+        polygons.push(polygon);
       }
     }
 
@@ -177,7 +171,7 @@
         'layout': {},
         'paint': {
           'fill-color': {
-            "property": 'mpPerimeter',//!!特别注意,geojson属性中一定要有这个属性才行
+            "property": 'mpPerimeter', //!!特别注意,geojson属性中一定要有这个属性才行
             "stops": [
               [0.2, "rgb(255,214,0)"],
               [0.3, "rgb(254,173,91)"],
@@ -195,13 +189,13 @@
     function initTrackView() {
       map.addSource('tacker-point', {
         "type": "geojson",
-        "data": trackpoint  //trackpoint的内容是根据请求数据变化
+        "data": trackpoint //trackpoint的内容是根据请求数据变化
       });
       map.addLayer({
         id: "track-position-in",
         type: "circle",
         source: "tacker-point",
-        filter: ["==", "result", true],//过滤条件,针对result为true的使用蓝色
+        filter: ["==", "result", true], //过滤条件,针对result为true的使用蓝色
         paint: {
           "circle-color": "#11b4da",
           "circle-radius": 6,
@@ -213,7 +207,7 @@
         id: "track-position-out",
         type: "circle",
         source: "tacker-point",
-        filter: ["!=", "result", true],//过滤条件,针对result为false的使用红色
+        filter: ["!=", "result", true], //过滤条件,针对result为false的使用红色
         paint: {
           "circle-color": "#FF0000",
           "circle-radius": 6,
@@ -223,65 +217,72 @@
       });
     }
 
-    var ip = "192.168.17.237";
-    var socket = "8080";
-    var indexName = "df_real";//数据库名称
-    var typeName = "df_real_type";//数据库表名
-    var paramSpatialType = "polygon";//空间查询类型
-    var paramSpatialOption = "34.8904,107.6743;34.8904,110.4648;33.4750,110.4648;33.4750,107.6743";//polygon查询的点,纬度在前,经度在后
-    var queryField = "imei"//数据库中对应的设备id
-    function initCarIds(ip, socket, db, table, spatial_type, spatial_options, id_field) {
+    var client = new elasticsearch.Client({
+      host: '192.168.94.121:9200'
+    });
+
+    function initCarIds() {
       //getRangeIdsUri实际上是拼接url地址,依赖的库是
-      var urlIds = getRangeIdsUri(ip, socket, db, table, spatial_type, spatial_options, id_field);
-      idsList = "";
-      $.get(urlIds, function(result) {
-        for (var index = 0; index < result.length && index < 50; index++) {
-          idsList += result[index].id + ",";//拼接id列表,用于post请求
-        }
-        idsList = idsList.substring(0, idsList.length - 1);//去除最后一个多余的逗号
-        timer = self.setInterval("loadRealData()", flashSpeed);//启动定时器,每隔若干秒查询一次
-
-      });
+      client.search({
+          index: 'df_real', //数据库名称
+          type: 'df_real_type', //数据库-表名称
+          body: {
+            size: 1000, //此处返回的是hits的数组大小，即设备数对的
+            query: {
+              bool: {
+                filter: {
+                  geo_bounding_box: {
+                    "geo": {
+                      top_left: {
+                        lat: 34.8904,
+                        lon: 107.6743
+                      },
+                      bottom_right: {
+                        lat: 33.4750,
+                        lon: 110.4648
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            aggregations: {
+              "id": {
+                terms: {
+                  field: "imei.key"  //这里一定注意key表示的是imei的key名称,
+                  //如果属性字段的类型是字符串的话都要传入fieldname.key来让后台明白
+                }
+              }
+            }
+          }
+        }, updateView);
     }
 
-    //加载实时数据,检查是否离开地理围栏
-    function loadRealData() {
-      var urlCheckFence = "http://192.168.17.237:8080/es/GeoEnclosureQuery";
-      var param = {
-        indexName: "df_real",
-        typeName: "df_real_type",
-        spatialCondition: "polygon:" + polygons[0], //"polygon:34.8904,107.6743;34.8904,110.4648;33.4750,110.4648;33.4750,107.6743",
-        timefield: "dataTime",
-        idfield: "imei",
-        ids: idsList
-      };
-
-      $.post(urlCheckFence, param, function(data) {
-        updateTrackView(data);
-      });
-    }
-
-    function updateTrackView(data) {
-      trackpoint.features = [];//清空上一次请求的数据
-      for (var i = 0; i < data.length; i++) {
+    function updateView(error, response) {
+      trackpoint.features = []; //清空上一次请求的数据
+      for(var i = 0; i < response.hits.hits.length; i++){
+        var item = response.hits.hits[i]._source;
+        var point = turf.point([item.geo.lon, item.geo.lat]);
+        var result = turf.booleanPointInPolygon(point, polygons[0]);
         var feautre = {
           "type": "Feature",
           "geometry": {
             "type": "Point",
-            "coordinates": [data[i].geo.lon, data[i].geo.lat]
+            "coordinates": [item.geo.lon, item.geo.lat]
           },
           "properties": {
-            "status": data[i].status,
-            "imei": data[i].imei,
-            "result": data[i].result
+            "status": item.status,
+            "imei": item.imei,
+            "model" : item.model,
+            "result": result
           }
         };
-        trackpoint.features.push(feautre);//保存这次请求的数据
+        trackpoint.features.push(feautre); //保存这次请求的数据
       }
       //这里是给之前设定的动态更新图层设置新的数据,实现动态播放的效果
       map.getSource('tacker-point').setData(trackpoint);
-
     }
+
   </script>
 </body>
 
