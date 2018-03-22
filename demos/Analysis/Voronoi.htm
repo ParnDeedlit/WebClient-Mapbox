@@ -61,7 +61,7 @@
     });
 
     function loadData() {
-      $.getJSON('../../data/analysis/buffer-hash-4.json', function(data) {
+      $.getJSON('../../data/analysis/buffer-hash-5.json', function(data) {
         convertDataToGeoJson(data);
         updateView(geojson);
       });
@@ -85,7 +85,7 @@
         'Point': 'pointKey'
       });
       geojson = turf.voronoi(points, {
-        bbox: [105, 35, 130, 45]
+        bbox: [115.4998, 39.4686, 117.3950, 40.2250]
       });
     }
 
