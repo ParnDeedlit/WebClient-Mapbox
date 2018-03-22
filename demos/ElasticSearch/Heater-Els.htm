@@ -4,15 +4,15 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>leaflet显示</title>
-  <script include="jquery,geojson,geohash,moment" src="../../libs/zondyclient/include-lib.js"></script>
-  <script include="elasticsearch" src="../../libs/zondyclient/include-mapboxgl.js"></script>
+  <script include="jquery,moment" src="../../libs/zondyclient/include-lib.js"></script>
+  <script include="elasticsearch,geojson,geohash," src="../../libs/zondyclient/include-mapboxgl.js"></script>
   <style>
     body {
       margin: 0;
       padding: 0;
     }
 
-    #mapid {
+    #map {
       position: absolute;
       top: 0;
       bottom: 0;
@@ -23,18 +23,37 @@
 </head>
 
 <body>
-  <div id="mapid"></div>
+  <div id="map"></div>
   <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
     var haloDisapearlevel = 14;
     var circleApearlevel = 15;
     var map = new mapboxgl.Map({
-      container: 'mapid',
-      style: 'mapbox://styles/mapbox/dark-v8',
+      container: 'map',
+      style: {
+        "version": 8,
+        "sources": {
+          "osm-tiles": {
+            "type": "raster",
+            'tiles': [
+              //"http://a.tile.thunderforest.com/transport/{z}/{x}/{y}.png"
+              "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "simple-tiles",
+          "type": "raster",
+          "source": "osm-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }]
+      },
       zoom: 10,
+      pitch: 45,
       center: [116.35, 39.9]
     });
-
 
     var mapExtent, mapLevel, startTime, endTime, geojson;
     startTime = currentTime = Date.parse(new Date("2012-11-20 00:00:00")); //1516723200000; 毫秒
@@ -67,6 +86,20 @@
                     to: endTime * 1000 //毫秒转换成秒
                   }
                 }
+              },
+              filter: {
+                geo_bounding_box: {
+                  'geometry': {
+                    top_left: {
+                      lat: 40.2082,
+                      lon: 115.9071
+                    },
+                    bottom_right: {
+                      lat: 39.5517,
+                      lon: 117.3024
+                    }
+                  }
+                }
               }
             }
           },
@@ -74,7 +107,7 @@
             'geohash': {
               geohash_grid: {
                 field: "geometry",
-                precision: 10
+                precision: 5
               }
             }
           }
