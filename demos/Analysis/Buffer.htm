@@ -54,16 +54,40 @@
       pitch: 45,
       center: [116.35, 39.9]
     });
-    var geojson;
+    var geojson =  {
+      "type": "FeatureCollection",
+      "features": []
+    };
 
     map.on('load', function() {
+      initMap();
       loadData();
     });
+
+    function initMap(){
+      //请特别重视这个图层名字geojsonBuffer
+      map.addSource('geojsonBuffer', {
+        "type": "geojson",
+        "data": geojson  //一开始的数据是空的,后面请求到了再更新
+      });
+
+      map.addLayer({
+        "id": "buffer-polygon",
+        "type": "fill",
+        "source": "geojsonBuffer",
+        'layout': {},
+        'paint': {
+          'fill-color': '#088',
+          'fill-opacity': 0.5,
+          'fill-outline-color': '#FFF'
+        }
+      });
+    }
 
     function loadData() {
       $.getJSON('../../data/analysis/buffer-hash-5.json', function(data) {
         convertDataToGeoJson(data);
-        updateView(geojson);
+        updateView();
       });
     }
 
@@ -89,23 +113,9 @@
       });
     }
 
-    function updateView(data) {
-      map.addSource('geojson-buffer', {
-        "type": "geojson",
-        "data": data
-      });
-
-      map.addLayer({
-        "id": "buffer-polygon",
-        "type": "fill",
-        "source": "geojson-buffer",
-        'layout': {},
-        'paint': {
-          'fill-color': '#088',
-          'fill-opacity': 0.5,
-          'fill-outline-color': '#FFF'
-        }
-      });
+    function updateView() {
+      //注意geojsonBuffer是之前添加的source的名字
+      map.getSource('geojsonBuffer').setData(geojson);
     }
   </script>
 
