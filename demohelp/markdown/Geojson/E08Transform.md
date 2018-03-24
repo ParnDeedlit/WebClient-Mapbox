@@ -6,7 +6,7 @@
 
 > 参考官方网页 [GeoJSON解析器官方示例](https://www.npmjs.com/package/geojson)
 
-> 该解析函数`只能`转换**数组**，`不能`转换`嵌套对象`如下，如果要住转换嵌套对象，请看下一节
+> 该解析函数`只能`转换**数组**，`不能`转换`嵌套对象`如下
 
 ``` json
 ---------------分割线，下面的可以----------
@@ -27,6 +27,42 @@
 }
 
 ```
+
+---
+#### 手动转换
+``` javascript
+var collections =
+      "type": "FeatureCollection",
+      "features": [];
+}
+//再针对你的数据，进行对应的类型转换
+var yourdata = [
+  {
+    name: "panzhuora",
+    geo: {
+      lon: 114.30,
+      lat: 30.50
+    }
+  },
+  ...,
+  {}
+]
+//一个一个追加数据
+for(var i =0; i < yourdata.length; i++){
+  var point = {//这个的point声明一定要写在循环体里面，特别重要
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [ yourdata[i].geo.lon, yourdata[i].geo.lat] ]
+    },
+    "properties": {
+        "name": yourdata[i].name
+    }
+  };
+  collections.features.push(point);
+}
+```
+
 
 ---
 #### 特定地理数据转换为GeoJSON
