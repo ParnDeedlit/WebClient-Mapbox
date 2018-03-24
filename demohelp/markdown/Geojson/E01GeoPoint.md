@@ -11,7 +11,8 @@
 
 ***注：*** 对类型"Point"来说，“coordinates"成员必须是一个一维数组。
 
-标准数据格式：
+**标准数据格式：**
+
 ```javascript
 var Point = {
     "type": "Feature",

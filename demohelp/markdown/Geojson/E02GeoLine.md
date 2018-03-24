@@ -9,7 +9,7 @@
 
 ***注：*** 对类型`LineString`来说，`coordinates`成员必须是`二维数组`，数组内部又是一个数组，表示组成这条线的点集。
 
-标准数据格式：
+**标准数据格式：**
 
 ```javascript
 var GeoLine = {
