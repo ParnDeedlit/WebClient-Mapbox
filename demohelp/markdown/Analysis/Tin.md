@@ -4,7 +4,7 @@
 
 ---
 #### 提交BUG
-> 找到bug请提交[issue](https://github.com/ParnDeedlit/WebClient-Leaflet/issues)
+> 找到bug请提交,我们会及时解决[issue](https://github.com/ParnDeedlit/WebClient-Mapbox/issues)
 
 ---
 #### 参数
