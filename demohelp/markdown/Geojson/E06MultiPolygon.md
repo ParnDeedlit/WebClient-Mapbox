@@ -81,3 +81,21 @@ var MultiPolygon = {
       }
     }
 ```
+
+---
+#### MapBox样式说明
+~~~ json
+{
+  "layout": {
+    "visibility": "visible" //是否可见  visible / none
+  },
+  "paint": {
+    "fill-antialias": true, //抗锯齿，true表示针对边界缝隙进行填充
+    "fill-color": "#000000", //颜色
+    "fill-opacity": 0.8, //透明度
+    "fill-outline-color": "#FFFF00",//边线颜色，没错,确实没有边线宽度这个选项
+    "fill-pattern":"picture_name", //线的拉伸图片类型，一定要与对应的样式库的图片名字一一对应
+    "fill-translate": [0,0] //表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+  }
+}
+~~~
