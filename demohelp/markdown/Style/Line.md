@@ -37,7 +37,7 @@ map.addLayer({
   "paint": {
     "line-width": 10, //宽度
     "line-color": "#9c27b0", //颜色
-    "line-opacity": 0.8, //透明度
+    "line-opacity": 0.8, //透明度 `0 ~ 1.0`
     "line-gap-width": 0, //线的沟宽，如果有一条线会变成2条线，中间有条沟
     "line-offset": 0, //尽量少用，如果这个值相对大的话在拐角处很容易变形变胖
     "line-dasharray": [1,1],//实线、虚线的组合，可以表示铁路线等
@@ -73,13 +73,13 @@ map.addLayer({
 |:---|:---|:---|
 |line-width|Number数字型| 10, 宽度|
 |line-color|String字符串| 颜色举例：`#ff0`，`#ffff00`,`rgb(255, 255, 0)`,`rgba(255, 255, 0, 1)`,`hsl(100, 50%, 50%)`,`hsla(100, 50%, 50%, 1)`,`yellow`|
-|line-opacity|Number数字型| 0.8, 透明度|
+|line-opacity|Number数字型| 0.8, 透明度`0 ~ 1.0`|
 |line-gap-width|Number数字型| 0, 线的沟宽，如果有一条线会变成2条线，中间有条沟|
 |line-offset|Number数字型| 0,`尽量少用`，如果这个值相对大的话在拐角处很容易变形变胖|
 |line-dasharray|Number数组型| [1,1],实线、虚线的组合，可以表示铁路线等|
 |line-blur|Number数字型| 2, 模糊度，和宽度配合使用，当宽度20，模糊度10时，出现边线模糊的效果，该值要小于线宽度|
 |`line-pattern`|String字符串| picture_name, 线的拉伸图片类型，`一定`要与对应的`样式库Sprite`的图片名字`一一对应`|
-|line-translate|Number数组型| [0,0] 表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上|
+|line-translate|Number数组型| [0,0] `[x,y]`表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上|
 
 
 
