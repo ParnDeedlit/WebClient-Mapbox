@@ -21,7 +21,7 @@ map.addSource('circleLayer', {
 });
 //针对数据源设置图层样式
 map.addLayer({
-  "id": "circle_cug",
+  "id": "circle_cug", //id不同重复，否则只绘制一次
   "type": "circle",// 固定语法 circle/line/fill/fill-extrusion/symbol/background
   "source": "circleLayer", //必须和上面的map.addSource('circleLayer'）的circleLayer一致
   "filter": ["==", "name", "中国地质大学（武汉）"], //过滤属性，关键点：name对应geojson中的属性字段

@@ -1,6 +1,7 @@
-### Line样式
+### Fill样式
 
-> 请特别关注`line-pattern`这个属性，下面的`Sprite 样式库`会详细介绍
+> + 请特别关注`fill-pattern`这个属性，下面的`Sprite 样式库`会详细介绍
+> + 请特别关注`"type":"line",`这个属性，这里要表达的是虽然`数据源是区`，但是仍然可以使用`线的样式`来绘制对应的区的边界线。`区可以复用线的样式`
 
 ---
 #### 提交BUG
@@ -23,27 +24,32 @@ map.addSource('lineLayer', {
 });
 //针对数据源设置图层样式
 map.addLayer({
-  "id": "roadid", //id不同重复，否则只绘制一次
-  "type": "line",
-  "source": "lineLayer", //必须和上面的lineLayer一致
-  "filter": ["==", "name", "光谷大道"], //关键点：name对应geojson中的属性字段
+  "id": "huiyishi", //id不同重复，否则只绘制一次
+  "type": "fill",
+  "source": "fillLayer", //必须和上面的geojsonPolygon一致
+  "filter": ["==", "name", "会议室"], //关键点：name对应geojson中的属性字段
   "layout": {
-    "line-cap": "square", //butt 尖头，round 圆头，square平头
-    "line-join": "miter", //bevel平拐，round 圆拐，miter棱拐
-    "line-miter-limit": 2, //棱拐的限制，一般用不上
-    "line-round-limit": 1.05, //圆拐的限制，一般用不上
-    "visibility": "visible", //是否可见  visible / none
+    "visibility": "visible",//visible/none  表示是否可见
   },
   "paint": {
-    "line-width": 10, //宽度
-    "line-color": "#9c27b0", //颜色
-    "line-opacity": 0.8, //透明度
-    "line-gap-width": 0, //线的沟宽，如果有一条线会变成2条线，中间有条沟
-    "line-offset": 0, //尽量少用，如果这个值相对大的话在拐角处很容易变形变胖
-    "line-dasharray": [1,1],//实线、虚线的组合，可以表示铁路线等
-    "line-blur": 2, //模糊度，和宽度配合使用，当宽度20，模糊度10时，出现边线模糊的效果，该值要小于线宽度
-    "line-pattern": "picture_name", //线的拉伸图片类型，一定要与对应的样式库的图片名字一一对应
-    "line-translate": [0,0] //表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+    "fill-antialias": true, //抗锯齿，true表示针对边界缝隙进行填充
+    "fill-color": "#00695c", //颜色
+    "fill-opacity": 0.9, //透明度
+    "fill-outline-color": "#FFFF00", //边线颜色，没错,确实没有边线宽度这个选项
+    "fill-pattern":"picture_name", //线的拉伸图片类型，一定要与对应的样式库的图片名字一一对应
+    "fill-translate": [0,0] //表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+  }
+});
+map.addLayer({
+  "id": "bounding",
+  "type": "line",  //相信你的眼睛，这里的的确确是line，区可以复用线的样式
+  "source": "fillLayer", //必须和上面的geojsonPolygon一致
+  "filter": ["==", "name", "边界区"], //关键点：name对应geojson中的属性字段
+  "paint": {
+    "line-width": 4, //宽度
+    "line-color": "#e51c23", //颜色
+    "line-opacity": 1.0, //透明度
+    "line-gap-width": 2, //线的沟宽，如果有一条线会变成2条线，中间有条沟
   }
 });
 ```
@@ -62,24 +68,17 @@ map.addLayer({
 
 |名称|类型|说明|
 |:---|:---|:---|
-|line-cap|String字符串|默认square, `butt` 尖头，`round` 圆头，`square`平头|
-|line-join|String字符串| 默认miter, `bevel`平拐，`round` 圆拐，`miter`棱拐|
-|line-miter-limit|Number数字型| 2, 棱拐的限制，一般用不上|
-|line-round-limit|Number数字型| 1.05, 圆拐的限制，一般用不上|
 |visibility|String字符串| visible, 是否可见  visible / none|
 
 ##### paint参数
 |名称|类型|说明|
 |:---|:---|:---|
-|line-width|Number数字型| 10, 宽度|
-|line-color|String字符串| 颜色举例：`#ff0`，`#ffff00`,`rgb(255, 255, 0)`,`rgba(255, 255, 0, 1)`,`hsl(100, 50%, 50%)`,`hsla(100, 50%, 50%, 1)`,`yellow`|
-|line-opacity|Number数字型| 0.8, 透明度|
-|line-gap-width|Number数字型| 0, 线的沟宽，如果有一条线会变成2条线，中间有条沟|
-|line-offset|Number数字型| 0,`尽量少用`，如果这个值相对大的话在拐角处很容易变形变胖|
-|line-dasharray|Number数组型| [1,1],实线、虚线的组合，可以表示铁路线等|
-|line-blur|Number数字型| 2, 模糊度，和宽度配合使用，当宽度20，模糊度10时，出现边线模糊的效果，该值要小于线宽度|
-|`line-pattern`|String字符串| picture_name, 线的拉伸图片类型，`一定`要与对应的`样式库Sprite`的图片名字`一一对应`|
-|line-translate|Number数组型| [0,0] 表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上|
+|fill-antialias|Bool布尔型| true, 抗锯齿，true表示针对边界缝隙进行填充|
+|fill-color|String字符串|颜色举例：`#ff0`，`#ffff00`,`rgb(255, 255, 0)`,`rgba(255, 255, 0, 1)`,`hsl(100, 50%, 50%)`,`hsla(100, 50%, 50%, 1)`,`yellow`|
+|fill-opacity|Number数字型| 0.9, 透明度|
+|fill-outline-color|String字符串| #FFFF00, 边线颜色，没错,确实`没有边线宽度`这个选项|
+|fill-pattern|String字符串|picture_name, 区的拉伸图片类型，一定要与对应的样式库的图片名字一一对应|
+|fill-translate|Number数组型| [0,0] 表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上|
 
 
 
@@ -148,6 +147,20 @@ airport-15: {
     }
 }
 ~~~
+
+---
+#### 样式库使用
+
+``` javascript
+map.addLayer({
+  "id": "main",  //id不同重复，负责只绘制一次
+  "type": "fill",
+  "source": "fillLayer", //必须和上面的geojsonPolygon一致
+  "paint": {
+    "fill-pattern":"alcohol-shop-15", //区的拉伸图片类型，一定要与对应的样式库的图片名字一一对应
+  }
+});
+```
 
 ---
 #### 自己生成样式库

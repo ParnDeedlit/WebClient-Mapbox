@@ -123,7 +123,7 @@
       //   简单线，介绍基本的样式
       //------------------------------------------------
       map.addLayer({
-        "id": "roadid",
+        "id": "roadid", //id不同重复，否则只绘制一次
         "type": "line",
         "source": "lineLayer", //必须和上面的lineLayer一致
         "filter": ["==", "name", "光谷大道"], //关键点：name对应geojson中的属性字段
@@ -150,7 +150,7 @@
       //   平行线，介绍特殊属性的用法
       //------------------------------------------------
       map.addLayer({
-        "id": "bridgeid",
+        "id": "bridgeid", //id不同重复，否则只绘制一次
         "type": "line",
         "source": "lineLayer", //必须和上面的lineLayer一致
         "filter": ["==", "name", "雄楚大道高架"], //关键点：name对应geojson中的属性字段
@@ -193,7 +193,7 @@
       //   符号线，介绍使用svg符号的用法
       //------------------------------------------------
       map.addLayer({
-        "id": "subway", //铁路的实线部分
+        "id": "subway",  //id不同重复，否则只绘制一次
         "type": "line",
         "source": "lineLayer", //必须和上面的lineLayer一致
         "filter": ["==", "name", "地铁二号线"], //关键点：name对应geojson中的属性字段
