@@ -49,6 +49,13 @@ map.addLayer({
 
 ---
 #### 参数
+
+##### layout参数
+|名称|类型|说明|
+|:---|:---|:---|
+|visibility|String字符串| visible, 是否可见  visible / none|
+
+##### paint参数
 |名称|类型|说明|
 |:---|:---|:---|
 |circle-radius|Number数字型|15, 半径|
