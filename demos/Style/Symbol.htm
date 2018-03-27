@@ -131,12 +131,12 @@
 
           "text-pitch-alignment": "auto", //"map", "viewport"对齐方向，这个用于道路的注记，表示是延道路方向显示还是生硬的添加注记
           "text-rotation-alignment": "auto", //map表示随地图旋转角度旋转，viewport表示随当前视角/数据形态（线的方向）一致
-          "text-field": "{name}",
+          "text-field": "{name}",//固定语法，请不要忘记{}号
           "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"], //这个请特别注意，涉及版权mapgis的字体只有少数，最好使用mapbox的自带的字体库
           "text-size": 20, //字体大小，默认16
           "text-max-width": 10, //字体最大宽度，默认10 ems
           "text-line-height": 1.2, //字体高度,默认 1.2 ems
-          "text-letter-spacing": 0,
+          "text-letter-spacing": 0,//文字字母间距，基本没用
           "text-justify": "center", //文字对齐方式,"left", "center", "right"
           "text-anchor": "center", //文字对齐方向，"center", "left", "right", "top", "bottom", "top-left", "top-right", "bottom-left", "bottom-right"
           "text-max-angle": 45, //针对拐角处，相邻字符的最大角度差
@@ -181,7 +181,7 @@
           "icon-image": "ferry-15", //与line-pattern,fill-pattern一样是对应样式库中的图片的名字
           "icon-offset": [0, 0], //[x,y]图片的偏移
 
-          "text-field": "{name}",
+          "text-field": "{name}",//固定语法，请不要忘记{}号
           "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"], //这个请特别注意，涉及版权mapgis的字体只有少数，最好使用mapbox的自带的字体库
           "text-size": 15, //字体大小，默认16
           "text-offset": [2.5,0], ////[x,y]文字的偏移

@@ -102,6 +102,7 @@ var map = new mapboxgl.Map({
 
 
 ![样式库图片](./sprite.png)
+[官方样式png](https://api.mapbox.com/styles/v1/mapbox/streets-v8/sprite.png?access_token=pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA)以及[官方样式json](https://api.mapbox.com/styles/v1/mapbox/streets-v8/sprite.json?access_token=pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA)
 
 > Sprite 样式库将将所有的符号排列在一张图片上，然后更具每个字符`airport-15`的映射找到对应的符号在整个图片的起始位置和宽高
 
