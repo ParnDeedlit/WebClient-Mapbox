@@ -87,6 +87,7 @@
       initCustomMarkerPopup();
     });
 
+    //针对图层绑定数据
     function initLayerPopup() {
       map.addSource('symbolLayer', {
         "type": "geojson",
@@ -125,6 +126,7 @@
     });
     }
 
+    //添加自定义的Popup
     function initCustomPopup(){
       var popup = new mapboxgl.Popup()
         .setLngLat([114.4028878211975, 30.46921388143542])
@@ -132,6 +134,7 @@
         .addTo(map);
     }
 
+    //针对标注Marker添加Popup
     function initCustomMarkerPopup(){
       var element = document.createElement('div');
       element.id = 'marker';//绑定自定义的样式

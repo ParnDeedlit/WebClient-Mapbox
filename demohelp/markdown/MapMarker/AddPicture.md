@@ -6,7 +6,7 @@
 > 找到bug请提交,我们会及时解决[issue](https://github.com/ParnDeedlit/WebClient-Mapbox/issues)
 
 ---
-#### Mapbox样式
+#### Mapbox官方说明
 
 [官方Marker API](https://www.mapbox.com/mapbox-gl-js/api#marker)
 
@@ -26,4 +26,29 @@
 |getOffset()|无|[Point](https://www.mapbox.com/mapbox-gl-js/api#point)|返回该标注的偏移值|
 |setOffset(offset)|offset|[Offset](https://www.mapbox.com/mapbox-gl-js/api/#pointlike)|设置该标注的偏移值|
 
-> `Offset`这个属性的示例可以参考[Offset](https://www.mapbox.com/mapbox-gl-js/example/custom-marker-icons/),说实话这个用处相对较少
+> `Offset`这个属性的示例可以参考[Offset](https://www.mapbox.com/mapbox-gl-js/api#popup),说实话这个用处相对较少
+
+#### 针对图层进行绑定
+> * map.on('click', 'men_ids', function(){}); 是针对Layer.id = 'men_ids'的图层进行处理
+> * map.on('click', function(mapMouseEvent){}); 是针对整个地图进行处理 [mapMouseEvent](https://www.mapbox.com/mapbox-gl-js/api#mapmouseevent)
+
+
+``` javascript
+map.on('click', function(mapMouseEvent) {
+  mapMouseEvent.lngLat;
+  ...
+}
+
+map.on('click', 'men_ids', function (e) {//请注意这里的men_ids要与上面的layer-id一致
+    var coordinates = e.features[0].geometry.coordinates.slice();
+    var description = e.features[0].properties.name;
+
+    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+    }//防止数据越界
+
+    new mapboxgl.Marker()
+        .setLngLat(coordinates)
+        .addTo(map);
+});
+```
