@@ -1,6 +1,28 @@
 ### Marker 样式
 > Marker的样式与常规的css样式一致，因此该示例相对容易实现
 
+> Marker的Picture样式主要还是通过HTML的方式来实现的，
+
+**核心代码**
+
+``` javascript
+#marker {
+  background-image: url('../../images/myImg/diqiu.png');
+  background-size: cover;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+// 创建一个DOM element
+var el = document.createElement('div');
+el.id = 'marker';//将该div与marker的样式绑定
+
+new mapboxgl.Marker(el);////绑定对应的HTML的元素
+
+```
+
 ---
 #### 提交BUG
 > 找到bug请提交,我们会及时解决[issue](https://github.com/ParnDeedlit/WebClient-Mapbox/issues)
