@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-  <meta http-equiv="Content-Type" content="textElement/html; charset=utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>GeoPoint</title>
   <script src="../../libs/zondyclient/include-mapboxgl.js"></script>
   <style>
@@ -15,9 +15,23 @@
       margin: 5px 15px;
     }
 
+    #marker {
+      width: 20px;
+      float: left;
+    }
+
+    #marker-icon {
+      background-image: url('../../images/myImg/diqiu.png');
+      background-size: cover;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      float: left;
+    }
+
     #marker-text {
       text-align: left;
-      width: auto;
+      width: 200px;
       height: 20px;
       float: left;
     }
@@ -63,11 +77,19 @@
       var popup = new mapboxgl.Popup()
         .setText('设置点击事件的文本信息');
 
-      var textElement = document.createElement('div');
-      textElement.id = 'marker-text';//绑定文字样式
-      textElement.innerText = "测试注记";//添加文字样式
+      // 创建一个DOM element
+      var icon = document.createElement('div');
+      icon.id = 'marker-icon';//绑定图片样式
+      var text = document.createElement('div');
+      text.id = 'marker-text';//绑定文字样式
+      text.innerText = "测试注记";//添加文字样式
 
-      new mapboxgl.Marker(textElement)
+      var el = document.createElement('div');
+      el.id = 'marker'; //将该div与marker的样式绑定
+      el.appendChild(icon);//整个父标注添加图片内容
+      el.appendChild(text);//整个父标注添加文字内容
+
+      new mapboxgl.Marker(el)
         .setLngLat(latlon)
         .setPopup(popup)
         .addTo(map);
