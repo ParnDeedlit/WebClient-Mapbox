@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>GeoPoint</title>
+  <script src="../../libs/zondyclient/include-mapboxgl.js"></script>
+  <style>
+    #mapid {
+      height: 635px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'mapid',
+      style: {
+        "version": 8,
+        "sources": {
+          "武汉": {
+            "type": "vector",
+            "tiles": [
+              "http://localhost:8822/vectortile/wuhan/{z}/{y}/{x}?"
+              //请注意，这里只是内部测试URL，请看专门的中地矢量瓦片这一节
+            ],
+            "minZoom": 0,
+            "maxZoom": 20
+          }
+        },
+        "layers": [],
+        //请注意，这里只是内部测试URL，请看专门的中地矢量瓦片这一节
+        "sprite": "http://localhost:8822/vectortile/sprite/sprite",
+        "glyphs": "http://localhost:8822/vectortile/glyphs/{fontstack}/{range}",
+      },
+      zoom: 9,
+      pitch: 45,
+      center: [114.39960479736327, 30.495722001885323]
+    });
+
+
+
+    map.on('load', function() {
+      initMap();
+    });
+
+    function initMap() {
+      //请特别重视这个图层名字circleLayer
+      map.addLayer({
+        "id": "武汉市行政区",
+        "type": "fill",
+        "source": "武汉",
+        "source-layer": "武汉市行政区",
+        "paint": {
+          "fill-color": "rgba(246, 243, 239, 1)"
+        }
+      });
+      map.addLayer({
+        "id": "绿地_fill_1",
+        "type": "fill",
+        "source": "武汉",
+        "source-layer": "绿地",
+        "minzoom": 3,
+        "maxzoom": 24,
+        "paint": {
+          "fill-outline-color": "rgba(221, 92, 92, 0)",
+          "fill-color": "rgba(202, 223, 178, 1)"
+        }
+      });
+      map.addLayer({
+          "id": "水域_fill_1",
+          "type": "fill",
+          "source": "武汉",
+          "source-layer": "水域",
+          "minzoom": 3,
+          "maxzoom": 24,
+          "paint": {
+            "fill-outline-color": "rgba(221, 92, 92, 0)",
+            "fill-color": "rgba(147, 182, 216, 1)"
+          }
+        }
+
+      );
+      map.addLayer({
+        "id": "铁路_line_1",
+        "type": "line",
+        "source": "武汉",
+        "source-layer": "铁路",
+        "paint": {
+          "line-width": 5,
+          "line-color": "rgba(0, 0, 0, 0.75)"
+        }
+      });
+      map.addLayer({
+        "id": "铁路_line_2",
+        "type": "line",
+        "source": "武汉",
+        "source-layer": "铁路",
+        "paint": {
+          "line-color": "rgba(255, 255, 255, 1)",
+          "line-dasharray": [
+            3,
+            3
+          ],
+          "line-width": 3
+        }
+      });
+      map.addLayer({
+        "id": "武汉市行政区_注记",
+        "type": "symbol",
+        "source": "武汉",
+        "source-layer": "武汉市行政区_注记",
+        "layout": {
+          "symbol-placement": "point", //"point"表示基于单个点的注记, "line"表示平铺在线上的注记
+          "icon-size": 1.4, //表示图片的缩放比例
+          "icon-image": "zoo_11",
+          "text-field": "{Ann_Name}",//该数据中必须含有该字段,否则不显示
+          "text-font": [
+            "微软雅黑",
+            ""//这里如果是igserver发布的服务是一定要设置具体的第二个字体的，这里仅仅是内部测试
+          ],
+          "text-size": 20,
+          "text-offset": [2.2,0], ////[x,y]文字的偏移
+        },
+        "paint": {
+          "icon-opacity": 1.0, //图标透明度
+          "icon-color": "#888", //图标颜色
+          "icon-halo-color": "#fff", //图标光晕颜色
+          "icon-halo-width": 2, //图标光晕宽度
+          "icon-halo-blur": 1, //图标光晕模糊度
+
+          "text-opacity": 1.0, // 文字透明度
+          "text-color": "#202", //文字颜色
+          "text-halo-color": "#fff", //文字光晕颜色
+          "text-halo-width": 2, //文字光晕宽度
+          "text-halo-blur": 1, //文字光晕模糊度
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

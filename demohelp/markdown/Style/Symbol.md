@@ -178,21 +178,29 @@ var map = new mapboxgl.Map({
 ```
 
 
-![样式库图片](./sprite.png)
+![样式库图片](/demohelp/markdown/Sprite/sprite.png)
+
+
 [官方样式png](https://api.mapbox.com/styles/v1/mapbox/streets-v8/sprite.png?access_token=pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA)以及[官方样式json](https://api.mapbox.com/styles/v1/mapbox/streets-v8/sprite.json?access_token=pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA)
 
-> Sprite 样式库将将所有的符号排列在一张图片上，然后更具每个字符`airport-15`的映射找到对应的符号在整个图片的起始位置和宽高
+> Sprite 样式库将将所有的符号排列在一张图片上，然后更具每个字符`star-24`的映射找到对应的符号在整个图片的起始位置和宽高
 
 ~~~ json
-airport-15: {
-  width: 17,   //宽为17
-  height: 17,  //高为17
-  x: 45,       //在大图中的水平位置是45
-  y: 37,       //在大图中的竖直位置是37
-  pixelRatio: 1,//像素角度，使效果先对圆润
-  visible: true
+"star-24": {
+  "height": 24, //高为24
+  "pixelRatio": 1,//像素角度，使效果先对圆润
+  "width": 24,  //宽为24
+  "x": 360,//在大图中的水平位置是360
+  "y": 96 //在大图中的竖直位置是96
+}，{
+
 }
+...
 ~~~
+
+> 根据上面的信息，最终得到的图片就是：
+
+![样式库图片](/demohelp/markdown/Sprite/star-24.svg)
 
 
 
