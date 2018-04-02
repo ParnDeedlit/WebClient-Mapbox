@@ -58,6 +58,9 @@
       inputCSS(httpUrl + "/cdn/mapboxgl/mapbox-gl.css");
       inputScript(httpUrl + "/cdn/mapboxgl/mapbox-gl.js");
     }
+    if (inArray(includes, 'datastore')) {
+      inputScript(httpUrl + "/cdn/zondyclient/datastore-mapboxgl.js");
+    }
     if (inArray(includes, 'echarts')) {
        inputScript(httpUrl + "/cdn/echarts/echarts.min.js");
        inputScript(httpUrl + "/cdn/echarts/echarts-gl.min.js");
@@ -80,15 +83,15 @@
     if (inArray(includes, 'turf')) {
       inputScript(httpUrl + "/cdn/turf/turf.min.js");
     }
+    if (inArray(includes, 'proj4')) {
+      inputScript(httpUrl + "/cdn/proj4/proj4.js");
+    }
     // if (!inArray(includes, 'wmts')) {
     //    inputScript("http://" + ip + ":" + socket + "/cdn/leaflet plugins/leaflet-tilelayer-wmts.js");
     // }
-    // if (inArray(includes, 'turf')) {
-    //    inputScript("http://" + ip + ":" + socket + "/cdn/turf/turf.min.js");
-    // }
-    // if (inArray(includes, 'mapv')) {
-    //    inputScript("http://" + ip + ":" + socket + "/cdn/mapv/mapv.min.js");
-    // }
+    if (inArray(includes, 'mapv')) {
+       inputScript(httpUrl + "/cdn/mapv/mapv.min.js");
+    }
   }
 
   load();
