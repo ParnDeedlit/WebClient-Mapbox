@@ -38,10 +38,10 @@
 var map = new mapboxgl.Map({
   style: {
     "version": 8,
-    //特别注意，这里是字体库，下面的sprite才是样式库
-    "glyphs":   "http://localhost:8822/vectortile/glyphs/{fontstack}/{range}",
-    //特别注意，这里是真正的图片样式库
-    "sprite": "http://localhost:8822/vectortile/sprite/sprite"
+    //特别注意，这里是用的mapbox官方的，中地内部的请参考中地glyphs
+    "glyphs":   "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+    //特别注意，这里是用的mapbox官方的，中地内部的请参考中地sprite
+    "sprite": "mapbox://sprites/mapbox/bright-v8"
   },
 });
 ```

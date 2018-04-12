@@ -92,10 +92,10 @@ map.addLayer({
 var map = new mapboxgl.Map({
   style: {
     "version": 8,
-    //特别注意，这里是用的mapbox官方的，中地内部的请参考中地glyphs
-    "glyphs":   "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
-    //特别注意，这里是用的mapbox官方的，中地内部的请参考中地sprite
-    "sprite": "mapbox://sprites/mapbox/bright-v8"
+    //特别注意，这里是字体库,字体库往往和下面的样式库一起使用
+    "glyphs": "http://192.168.10.185:6163/igs/rest/mrms/vtiles/fonts/{fontstack}/{range}.pbf",
+    //特别注意，这里是真正的图片样式库
+    "sprite": "http://192.168.10.185:6163/igs/rest/mrms/vtiles/sprite"
   },
 });
 ```
