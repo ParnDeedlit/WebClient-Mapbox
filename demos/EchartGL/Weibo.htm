@@ -26,7 +26,7 @@
     });
     myChart.showLoading();
     $.getJSON('../../data/echart/weibo/data.json', function(weiboData) {
-
+      myChart.hideLoading();
       weiboData = weiboData.map(function(serieData, idx) {
         var px = serieData[0] / 1000;
         var py = serieData[1] / 1000;
