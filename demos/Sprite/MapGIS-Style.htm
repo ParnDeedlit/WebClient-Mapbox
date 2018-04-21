@@ -21,7 +21,7 @@
     var map;
     //一定要去mapbox注册一个key,这个key会失效的
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
-    $.get("http://localhost:8822/vectortile/style/wuhan", function(styleEntity) {
+    $.get("http://182.61.52.190:8822/vectortile/style/wuhan", function(styleEntity) {
       styleItem = JSON.parse(styleEntity);
       map = new mapboxgl.Map({
         container: 'mapid',
