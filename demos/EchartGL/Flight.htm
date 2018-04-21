@@ -27,7 +27,7 @@
     myChart.showLoading();
     // 数据来自 https://uber.github.io/deck.gl/#/examples/core-layers/line-layer
     $.get('../../data/echart/flight/data.txt', function(text) {
-
+      myChart.hideLoading();
       var data = decodeFlightPathData(text);
 
       var dataAll = [];
