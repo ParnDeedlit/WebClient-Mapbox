@@ -26,10 +26,29 @@
     //一定要去mapbox注册一个key,这个key会失效的
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
     var map = new mapboxgl.Map({
-      container: 'map', // 绑定div
-      style: 'mapbox://styles/mapbox/streets-v9', // 使用MapBox官方的样式
-      center: [114.50, 30], // 中心点
-      zoom: 1 // 开始级别
+      container: 'map',
+      style: {
+        "version": 8,
+        "sources": {
+          "osm-tiles": {
+            "type": "raster",
+            'tiles': [
+              "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "simple-tiles",
+          "type": "raster",
+          "source": "osm-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }]
+      },
+      zoom: 1,
+      pitch: 45,
+      center: [116.35, 30.92]
     });
   </script>
 </body>
