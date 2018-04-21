@@ -50,10 +50,10 @@
           "maxzoom": 22
         }]
       },
-      zoom: 10,
-      pitch: 45,
-      center: [116.35, 39.9]
+      zoom: 8,
+      center: [114.289398, 30.59418345]
     });
+
     var geojson = {
       "type": "FeatureCollection",
       "features": []
@@ -85,31 +85,15 @@
     }
 
     function loadData() {
-      $.getJSON('../../data/analysis/buffer-hash-5.json', function(data) {
+      $.getJSON('../../data/analysis/point.json', function(data) {
         convertDataToGeoJson(data);
         updateView();
       });
     }
 
     function convertDataToGeoJson(origindata) {
-      var columnarPoints = [];
-      var points;
-      origindata.aggregations.geohash.buckets.forEach(function(bucket) {
-        var coordinates = decodeGeoHash(bucket.key);
-        var countNumber = bucket.doc_count;
-        var point = {
-          pointKey: [
-            coordinates.longitude[2], coordinates.latitude[2]
-          ],
-          count: bucket.doc_count
-        }; //[0] min [1]max [2] 中心点
-        columnarPoints.push(point);
-      });
-      points = GeoJSON.parse(columnarPoints, {
-        'Point': 'pointKey'
-      });
-      geojson = turf.voronoi(points, {
-        bbox: [115.4998, 39.4686, 117.3950, 40.2250]
+      geojson = turf.voronoi(origindata, {
+        bbox: [113.67, 30.00, 115.20, 31.41]
       });
     }
 
